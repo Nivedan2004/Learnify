@@ -5,31 +5,77 @@ import DashboardHeader from "./dashboard/_components/DashboardHeader";
 
 export default function Home() {
   return (
-   <div>
-      <DashboardHeader/>
-      <section className=" z-50 pt-10">
-  <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-12">
-      <Image src={'/knowledge.png'} alt="image" 
-      width={80} height={80} className="absolute -rotate-12"/>
-      <Image src={'/code.png'} alt="image" 
-      width={80} height={80} className="absolute rotate-12 right-36"/>
-      <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-      AI-Powered <span className='text-primary'>Course</span><br></br> Generator  </h1>
-      <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">Your Preperation Companion: Effortless Study Material at Your Fingertips</p>
-     
-      <div className="flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
-          <a href="/dashboard" className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary hover:bg-primary focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+    <div>
+      <DashboardHeader />
+
+      <section className="z-50 pt-10">
+        <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-12">
+          <Image
+            src={"/knowledge.png"}
+            alt="image"
+            width={80}
+            height={80}
+            className="absolute -rotate-12"
+          />
+          <Image
+            src={"/code.png"}
+            alt="image"
+            width={80}
+            height={80}
+            className="absolute rotate-12 right-36"
+          />
+          <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+            AI-Powered <span className="text-primary">Course</span>
+            <br />
+            Generator
+          </h1>
+          <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
+            Your Preperation Companion: Effortless Study Material at You
+            Fingertips
+          </p>
+
+          <div className="flex flex-col mb-4 lg:mb-10 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
+            <a
+              href="/dashboard"
+              className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary hover:bg-primary focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
+            >
               Get Started
-              <svg className="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-          </a>
-      </div>
-     
-      <div className="px-4 mx-auto text-center md:max-w-screen-md lg:max-w-screen-lg lg:px-36">
-          <div className="flex flex-wrap justify-center items-center mt-8 text-gray-500 sm:justify-between">
+              <svg
+                className="ml-2 -mr-1 w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+            </a>
           </div>
-      </div> 
-  </div>
-</section>
-   </div>
+
+          {/* Loom video immediately below CTA */}
+          <div className="flex justify-center mt-[-1rem] mb-20">
+            <iframe
+              width="760"
+              height="415"
+              src="https://www.loom.com/embed/422ed924fbaf454a82730825725c6717?sid=5a664f93-1e44-4e39-b128-c2d373e31c37"
+              title="Loom video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              className="rounded-2xl"
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <footer className="text-center text-gray-500 text-sm pb-6">
+        © {new Date().getFullYear()} Created by Nivedan B R and Advik Rajesh
+        Holalu in Bengaluru
+      </footer>
+    </div>
   );
 }
