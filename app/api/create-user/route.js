@@ -1,16 +1,18 @@
-import { inngest } from "@/inngest/client";
 import { NextResponse } from "next/server";
+import { getOrCreateDbUser, requireAuthUser } from "@/lib/currentUser";
 
-export async function POST(req) {
+export async function POST() {
+  const { user, email, error } = await requireAuthUser();
+  if (error) return error;
 
-    const {user}=await req.json();
+  const dbUser = await getOrCreateDbUser(email, user.fullName);
+  return NextResponse.json({ result: dbUser });
+}
 
-    const result=await inngest.send({
-        name:'user.create',
-        data:{
-            user:user
-        }
-    })
+export async function GET() {
+  const { user, email, error } = await requireAuthUser();
+  if (error) return error;
 
-    return NextResponse.json({result:result})
+  const dbUser = await getOrCreateDbUser(email, user.fullName);
+  return NextResponse.json({ result: dbUser });
 }

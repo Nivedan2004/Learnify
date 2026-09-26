@@ -30,7 +30,7 @@ export default function Home() {
             Generator
           </h1>
           <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
-            Your Preperation Companion: Effortless Study Material at You
+            Your Preperation Companion: Effortless Study Material at Your
             Fingertips
           </p>
 

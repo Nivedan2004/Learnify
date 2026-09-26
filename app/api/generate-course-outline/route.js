@@ -1,36 +1,89 @@
 import { courseOutlineAIModel } from "@/configs/AiModel";
 import { db } from "@/configs/db";
 import { STUDY_MATERIAL_TABLE } from "@/configs/schema";
+import { inngest } from "@/inngest/client";
+import { FREE_COURSE_LIMIT } from "@/lib/constants";
+import { parseAiJson } from "@/lib/parseAiJson";
+import {
+  getCourseCount,
+  getOrCreateDbUser,
+  requireAuthUser,
+} from "@/lib/currentUser";
 import { NextResponse } from "next/server";
-import { inngest } from "../../../inngest/client";
 
-export async function POST(req){
+export const maxDuration = 60;
 
-    const{courseId,topic,courseType,difficultyLevel,createdBy}=await req.json();
+export async function POST(req) {
+  const { user, email, error } = await requireAuthUser();
+  if (error) return error;
 
-    const PROMPT='Generate a study material for '+topic+' for '+courseType+' and level of difficulty will be '+difficultyLevel+'with summary of course, List of Chapters (Max 3) along with summary and Emoji icon for each chapter, Topic list in each chapter, and all result in JSON format '
-    //Generate Course Layout using ai
-    const aiResp=await courseOutlineAIModel.sendMessage(PROMPT);
-    const aiResult= JSON.parse(aiResp.response.text());
+  const body = await req.json();
+  const { courseId, topic, courseType, difficultyLevel } = body;
 
-    //Save the result along with User Input 
-    const dbResult=await db.insert(STUDY_MATERIAL_TABLE).values({
-        courseId:courseId,
-        courseType:courseType,
-        createdBy:createdBy,
-        topic:topic,
-        courseLayout:aiResult
-    }).returning({resp:STUDY_MATERIAL_TABLE})
+  if (!courseId || !topic?.trim() || !courseType || !difficultyLevel) {
+    return NextResponse.json(
+      { error: "Please complete all course details before generating." },
+      { status: 400 }
+    );
+  }
 
-    //Trigger the ingest function to generate chapter notes
+  const dbUser = await getOrCreateDbUser(email, user.fullName);
+  const courseCount = await getCourseCount(email);
 
-    const result=await inngest.send({
-        name:'notes.generate',
-        data:{
-            course:dbResult[0].resp
-        }
+  if (!dbUser?.isMember && courseCount >= FREE_COURSE_LIMIT) {
+    return NextResponse.json(
+      { error: "Free credit limit reached. Upgrade to create more courses." },
+      { status: 403 }
+    );
+  }
+
+  const prompt = `Generate a study material for "${topic}" for ${courseType} at ${difficultyLevel} difficulty.
+Return JSON only with this shape:
+{
+  "course_title": string,
+  "course_summary": string,
+  "chapters": [
+    {
+      "chapter_number": number,
+      "chapter_title": string,
+      "chapter_summary": string,
+      "emoji": string,
+      "topics": [{ "topic": string, "description": string }]
+    }
+  ]
+}
+Include at most 3 chapters.`;
+
+  try {
+    const aiResp = await courseOutlineAIModel.sendMessage(prompt);
+    const aiResult = parseAiJson(aiResp.response.text());
+
+    const dbResult = await db
+      .insert(STUDY_MATERIAL_TABLE)
+      .values({
+        courseId,
+        courseType,
+        createdBy: email,
+        topic: topic.trim(),
+        difficultyLevel,
+        courseLayout: aiResult,
+        status: "Generating",
+      })
+      .returning();
+
+    await inngest.send({
+      name: "notes.generate",
+      data: {
+        course: dbResult[0],
+      },
     });
-    console.log(result);
 
-    return NextResponse.json({result:dbResult[0]})
+    return NextResponse.json({ result: dbResult[0] });
+  } catch (err) {
+    console.error("Course outline generation failed:", err);
+    return NextResponse.json(
+      { error: "Failed to generate course. Please try again." },
+      { status: 500 }
+    );
+  }
 }
