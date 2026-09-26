@@ -28,7 +28,7 @@ function SelectOption({selectedStudyType}) {
     const [selectedOption,setSelectedOption]=useState();
   return (
     <div>
-        <h2 className='text-center mb-2 text-lg'>Choose the topic you want to genrate your study material </h2>
+        <h2 className='text-center mb-2 text-lg'>Choose the topic you want to generate your study material </h2>
         <div className='grid grid-cols-2 mt-5 md:grid-cols-3 lg:grid-cols-5 gap-5'>
             {Options.map((option,index)=>(
                 <div key={index} 

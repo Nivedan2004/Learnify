@@ -5,6 +5,9 @@ import { ClerkProvider } from "@clerk/nextjs";
 import Provider from "./provider";
 
 export const metadata = {
+  title: "Learnify — AI Course Generator",
+  description:
+    "Generate personalized study material, notes, flashcards, and quizzes with AI.",
 };
 
 const outfit=Outfit({subsets:['latin']});
